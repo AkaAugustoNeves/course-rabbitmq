@@ -1,26 +1,14 @@
-package br.com.pilares.mspayment.model.entities;
+package br.com.pilares.msorder.model.dto;
 
-import java.util.UUID;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class Payment {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PaymentDto {
+	
 	private Long id;
 	private String hash;
 	private String hashU;
 	private String hashP;
 	
-	public Payment() {
-		this.hash = UUID.randomUUID().toString();
-		this.hashU = UUID.randomUUID().toString();
-		this.hashP = UUID.randomUUID().toString();
+	public PaymentDto() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {
@@ -54,5 +42,5 @@ public class Payment {
 	public void setHashP(String hashP) {
 		this.hashP = hashP;
 	}
-	
+
 }

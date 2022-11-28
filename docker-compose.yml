@@ -43,6 +43,21 @@ services:
       networks:
         - db_course_payment
       restart: unless-stopped
+    db_evaluation:
+      container_name: db_evaluation
+      image: postgres
+      environment:
+        - POSTGRES_DB=db_evaluation
+        - POSTGRES_USER=EVALUATION
+        - POSTGRES_PASSWORD=EVALUATION
+        - PGDATA=/data/postgres
+      volumes:
+        - ./V_db_evaluation:/data/postgres
+      ports:
+        - "5434:5432"
+      networks:
+        - db_course_payment
+      restart: unless-stopped
 
 networks:
   db_course_payment:

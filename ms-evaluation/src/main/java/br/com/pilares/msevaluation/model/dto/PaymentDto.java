@@ -1,26 +1,14 @@
-package br.com.pilares.mspayment.model.entities;
+package br.com.pilares.msevaluation.model.dto;
 
-import java.util.UUID;
+public class PaymentDto {
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class Payment {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String hash;
 	private String hashU;
 	private String hashP;
 	
-	public Payment() {
-		this.hash = UUID.randomUUID().toString();
-		this.hashU = UUID.randomUUID().toString();
-		this.hashP = UUID.randomUUID().toString();
+	public PaymentDto() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {

@@ -1,5 +1,10 @@
-package br.com.pilares.mspayment.config;
+package br.com.pilares.msorder.config;
 
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.ExchangeBuilder;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -9,27 +14,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.amqp.core.FanoutExchange;
-import  org.springframework.amqp.core.Queue;
 
 @Configuration
 public class AMQPConfig {
-
-	/*@Bean
-	public Queue createQueue() {
-		//return new Queue("PAYMENT_CONCLUDED", false);
-		return QueueBuilder.nonDurable("PAYMENT_CONCLUDED").build();
-	}*/
-	
-	@Bean
-	public RabbitAdmin createRabbitAdmin(ConnectionFactory connection) {
-		return new RabbitAdmin(connection);
-	}
-	
-	@Bean
-	public ApplicationListener<ApplicationReadyEvent> initializerAdmin(RabbitAdmin rabbitAdmin){
-		return event -> rabbitAdmin.initialize();
-	}
 	
 	@Bean
 	public Jackson2JsonMessageConverter messageConverter() {
@@ -44,8 +31,28 @@ public class AMQPConfig {
 	}
 	
 	@Bean
+	public Queue queueDetailsOrder() {
+		return QueueBuilder.nonDurable("PAYMENT.DETAILS-ORDER").build();
+	}
+	
+	@Bean
 	public FanoutExchange fanoutExchange() {
-		return new FanoutExchange("PAYMENT.EX");
+		return ExchangeBuilder.fanoutExchange("PAYMENT.EX").build();
+	}
+	
+	@Bean
+	public Binding bindPaymentOrder(FanoutExchange fanoutExchange) {
+		return BindingBuilder.bind(queueDetailsOrder()).to(fanoutExchange);
+	}
+	
+	@Bean
+	public RabbitAdmin CreateRabbitAdmin(ConnectionFactory conn) {
+		return new RabbitAdmin(conn);
+	}
+	
+	@Bean
+	public ApplicationListener<ApplicationReadyEvent> initializerAdmin(RabbitAdmin rabbitAdmin){
+		return event -> rabbitAdmin.initialize();
 	}
 	
 }

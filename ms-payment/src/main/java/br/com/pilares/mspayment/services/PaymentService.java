@@ -28,7 +28,7 @@ public class PaymentService {
 	
 	public Payment register() {
 		Payment payment = paymentRepository.save(new Payment());
-		rabbitTemplate.send("PAYMENT_CONCLUDED", new Message(payment.getId().toString().getBytes()));
+		rabbitTemplate.convertAndSend("PAYMENT.EX", "", payment);
 		return payment;
 	}	
 	
