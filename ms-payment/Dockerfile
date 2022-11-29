@@ -1,0 +1,17 @@
+FROM openjdk:11-jre-slim
+
+WORKDIR /app
+
+ENV DB_PAYMENT_URL ""
+ENV DB_PAYMENT_USERNAME ""
+ENV DB_PAYMENT_PASSWORD ""
+ENV RABBITMQ_HOST ""
+ENV RABBITMQ_PORT ""
+ENV RABBITMQ_USERNAME ""
+ENV RABBITMQ_PASSWORD ""
+
+COPY target/ms-payment-0.0.1-SNAPSHOT.jar /app/ms-payment.jar
+
+EXPOSE 8081
+
+CMD ["java", "-jar", "ms-payment.jar"]

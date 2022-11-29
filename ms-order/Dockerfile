@@ -1,0 +1,17 @@
+FROM openjdk:11-jre-slim
+
+WORKDIR /app
+
+ENV DB_ORDER_URL ""
+ENV DB_ORDER_USERNAME ""
+ENV DB_ORDER_PASSWORD ""
+ENV RABBITMQ_HOST ""
+ENV RABBITMQ_PORT ""
+ENV RABBITMQ_USERNAME ""
+ENV RABBITMQ_PASSWORD ""
+
+COPY target/ms-order-0.0.1-SNAPSHOT.jar /app/ms-order.jar
+
+EXPOSE 8082
+
+CMD ["java", "-jar", "ms-order.jar"]

@@ -13,6 +13,8 @@ services:
         environment:
             - RABBITMQ_DEFAULT_USER=user
             - RABBITMQ_DEFAULT_PASS=alura
+        networks:
+          - rabbit_course_payment
     db_payment:
       container_name: db_payment
       image: postgres
@@ -58,8 +60,73 @@ services:
       networks:
         - db_course_payment
       restart: unless-stopped
+    ms-payment:
+      container_name: ms-payment
+      build: ./ms-payment
+      ports:
+        - 8081:8081
+      environment:
+        - DB_PAYMENT_URL=jdbc:postgresql://db_payment:5432/db_payment
+        - DB_PAYMENT_USERNAME=PAYMENT
+        - DB_PAYMENT_PASSWORD=PAYMENT
+        - RABBITMQ_HOST=rabbitmq
+        - RABBITMQ_PORT=5672
+        - RABBITMQ_USERNAME=user
+        - RABBITMQ_PASSWORD=alura
+      working_dir: /app
+      networks:
+        - db_course_payment
+        - ms_course_payment
+        - rabbit_course_payment
+      depends_on:
+        - rabbitmq
+        - db_payment
+    ms-order:
+      container_name: ms-order
+      build: ./ms-order
+      ports:
+        - 8082:8082
+      environment:
+        - DB_ORDER_URL=jdbc:postgresql://db_order:5432/db_order
+        - DB_ORDER_USERNAME=ORDER
+        - DB_ORDER_PASSWORD=ORDER
+        - RABBITMQ_HOST=rabbitmq
+        - RABBITMQ_PORT=5672
+        - RABBITMQ_USERNAME=user
+        - RABBITMQ_PASSWORD=alura
+      working_dir: /app
+      networks:
+        - db_course_payment
+        - ms_course_payment
+        - rabbit_course_payment
+      depends_on:
+        - rabbitmq
+        - db_order
+    ms-evaluation:
+      container_name: ms-evaluation
+      build: ./ms-evaluation
+      ports:
+        - 8083:8083
+      environment:
+        - DB_EVALUATION_URL=jdbc:postgresql://db_evaluation:5432/db_evaluation
+        - DB_EVALUATION_USERNAME=EVALUATION
+        - DB_EVALUATION_PASSWORD=EVALUATION
+        - RABBITMQ_HOST=rabbitmq
+        - RABBITMQ_PORT=5672
+        - RABBITMQ_USERNAME=user
+        - RABBITMQ_PASSWORD=alura
+      working_dir: /app
+      networks:
+        - db_course_payment
+        - ms_course_payment
+        - rabbit_course_payment
+      depends_on:
+        - rabbitmq
+        - db_evaluation
 
 networks:
+  rabbit_course_payment:
+    driver: bridge
   db_course_payment:
     driver: bridge
   ms_course_payment:
